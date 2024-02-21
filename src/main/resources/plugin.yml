@@ -1,0 +1,19 @@
+name: StrokkChatFormat
+version: '${version}'
+main: net.strokkur.Main
+api-version: '1.20'
+prefix: Strokk
+load: STARTUP
+author: Strokkur24
+description: Simple component based chat format additions
+depend: [PlaceholderAPI]
+permissions:
+  strokkur.reload:
+    description: "Allows the user to reload the config"
+    default: op
+
+commands:
+  scformat:
+    description: Command used for plugin functionality
+  test:
+    description: test
