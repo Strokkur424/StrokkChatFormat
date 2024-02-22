@@ -9,11 +9,17 @@ description: Simple component based chat format additions
 depend: [PlaceholderAPI]
 permissions:
   strokkur.reload:
-    description: "Allows the user to reload the config"
+    description: Allows the user to reload the config
     default: op
+  strokkur.inv:
+    description: Allows the user to use the [inv] placeholder in chat
+    default: false
+  strokkur.item:
+    description: Allows the user to use the [item] placeholder in chat
+    default: false
 
 commands:
   scformat:
     description: Command used for plugin functionality
-  test:
-    description: test
+  #test:
+  #  description: test

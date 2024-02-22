@@ -3,11 +3,10 @@ package net.strokkur.datasave;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.strokkur.Data;
 import net.strokkur.Main;
-import org.bukkit.Bukkit;
+import net.strokkur.util.fastinv.FastInv;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -19,7 +18,7 @@ import java.util.UUID;
 
 public class SInventory {
 
-    static HashMap<Integer, Inventory> inventoryLists = new HashMap<>();
+    static HashMap<Integer, FastInv> inventoryLists = new HashMap<>();
     static HashMap<UUID, Integer> playerInventoryList = new HashMap<>();
     int id;
     public SInventory(Player p) {
@@ -28,9 +27,11 @@ public class SInventory {
 
         if (playerInventoryList.containsKey(p.getUniqueId())) {
             inventoryLists.remove(playerInventoryList.get(p.getUniqueId()));
+            playerInventoryList.remove(p.getUniqueId());
         }
 
-        inventoryLists.put(i, getAsInventory(p.getInventory()));
+        inventoryLists.put(i, getAsInventory(p));
+        playerInventoryList.put(p.getUniqueId(), i);
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -44,44 +45,44 @@ public class SInventory {
     }
 
     public static void openInventory(int ID, Player p) {
-        Inventory inv = inventoryLists.get(ID);
+        FastInv inv = inventoryLists.get(ID);
         if (inv == null) {
             p.sendMessage(MiniMessage.miniMessage().deserialize(Data.expirationMessage));
             return;
         }
 
-        p.openInventory(inv);
+        inv.open(p);
         p.playSound(p, Sound.BLOCK_CHEST_OPEN, 1, 1);
     }
 
-    public Inventory getAsInventory(PlayerInventory p) {
-        Inventory inv = Bukkit.createInventory(null, 54);
-        ItemStack filler = new ItemStack(Material.LIGHT_GRAY_STAINED_GLASS_PANE);
+    public FastInv getAsInventory(Player pl) {
+        PlayerInventory p = pl.getInventory();
+        FastInv inv = new FastInv(54, pl.getName() + "'s Inventory");
+
+        ItemStack filler = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         filler.editMeta(meta -> meta.displayName(MiniMessage.miniMessage().deserialize("<black></black>")));
+        inv.setItems(0, 53, filler, e -> e.setCancelled(true));
 
-        // Fill inventory with filler items
-        for (int i = 0; i < 54; i++) {
-            inv.setItem(i, filler);
-        }
-
-        setItemStack(inv, 0, p.getHelmet());
-        setItemStack(inv, 1, p.getChestplate());
-        setItemStack(inv, 2, p.getLeggings());
-        setItemStack(inv, 3, p.getBoots());
-
+        setItemStack(inv, 1, p.getHelmet());
+        setItemStack(inv, 2, p.getChestplate());
+        setItemStack(inv, 3, p.getLeggings());
+        setItemStack(inv, 4, p.getBoots());
         setItemStack(inv, 7, p.getItemInOffHand());
-        setItemStack(inv, 8, p.getItemInMainHand());
 
         // Set the rest of the items
-        for (int i = 0; i < 36; i++) {
-            setItemStack(inv, i + 18, p.getItem(i));
+        for (int i = 8; i >= 0; i--) {
+            setItemStack(inv, i + 9 * 5, p.getItem(i));
+        }
+
+        for (int i = 35; i >= 9; i--) {
+            setItemStack(inv, i + 9, p.getItem(i));
         }
 
         return inv;
     }
 
-    void setItemStack(Inventory inv, int index, ItemStack is) {
-        inv.setItem(index, Objects.requireNonNullElse(is, new ItemStack(Material.AIR)));
+    void setItemStack(FastInv inv, int index, ItemStack is) {
+        inv.setItem(index, Objects.requireNonNullElse(is, new ItemStack(Material.AIR)), e -> e.setCancelled(true));
     }
 
 }

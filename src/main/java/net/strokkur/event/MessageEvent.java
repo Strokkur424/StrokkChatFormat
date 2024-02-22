@@ -1,76 +1,90 @@
 package net.strokkur.event;
 
+import io.papermc.paper.event.player.AsyncChatEvent;
+import it.unimi.dsi.fastutil.Pair;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentBuilder;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.strokkur.Data;
 import net.strokkur.datasave.SInventory;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
+
 public class MessageEvent implements Listener {
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onMessage(PlayerChatEvent e) {
-        e.setCancelled(true);
 
-        String msg = e.getMessage();
+    /*  This is only for testing gradient behaviour
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void message(AsyncChatEvent e) {
+        Component c = deserialize("<gradient:#e0d989:#e08c89>" + serialize(e.message()) +  "</gradient>");
+        e.message(c);
+    }*/
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void preMessage(AsyncChatEvent e) {
+        String msg = serialize(e.message());
         Player p = e.getPlayer();
-
-        Component hoverContent = deserialize(addMsgCommandSuggestion("<hover:show_text:\"" + modifiedHover(p) + "\">" + setPlaceholders(p, Data.format) + "<reset>", p));
         Component outContent = deserialize(addMsgCommandSuggestion(msg, p));
 
         boolean inv = false;
 
-        if (Data.inv && msg.contains("[inv]")) {
+        var invText = containsWordFromList(msg, Data.invPlaceholders);
+        var itemText = containsWordFromList(msg, Data.itemPlaceholders);
+
+        if (p.hasPermission("strokkur.inv")
+                && Data.inv
+                && invText.left()) {
+
             inv = true;
             int id = new SInventory(p).getID();
-            if (Data.other_content) {
-                String[] strings = msg.split("\\[inv]", 2);
-                outContent = deserialize(addMsgCommandSuggestion(strings[0], p) + "<click:run_command:/scformat viewinv6237345 " + id + ">" + setPlaceholders(p, Data.invText) + "</click>" + addMsgCommandSuggestion(strings[1], p));
-
+            String[] strings = msg.split(regexify(invText.right()), 2);
+            if (Data.other_content && strings.length == 2) {
+                outContent = deserialize(addMsgCommandSuggestion(strings[0], p) + "<hover:show_text:\"" + setPlaceholders(p, Data.invInfo) + "\">" + "<click:run_command:/scformat viewinv6237345 " + id + ">" + setPlaceholders(p, Data.invText) + "<reset>" + addMsgCommandSuggestion(strings[1], p));
             }
             else {
-                outContent = deserialize("<click:run_command:/scformat viewinv6237345 " + id + ">" + setPlaceholders(p, Data.invText) + "</click>");
+                outContent = deserialize("<hover:show_text:" + setPlaceholders(p, Data.invInfo) + ">").append(deserialize("<click:run_command:/scformat viewinv6237345 " + id + ">" + setPlaceholders(p, Data.invText)));
             }
         }
 
-        if (!inv && Data.item && msg.contains("[item]")) {
-            ItemStack item = p.getInventory().getItemInMainHand();
+        if (p.hasPermission("strokkur.item")
+                && !inv
+                && Data.item
+                && itemText.left()) {
 
-            Component hover = item.displayName();
-            if (item.lore() != null) {
-                hover = hover.appendNewline();
-                for (int i = 0; i < item.lore().size(); i++) {
-                    hover = hover.append(item.lore().get(i));
-                    if (i != item.lore().size() - 1)
-                        hover = hover.appendNewline();
+            ItemStack item = p.getInventory().getItemInMainHand();
+            if (item.getType().equals(Material.AIR)) {
+                p.sendMessage(deserialize(Data.noItem));
+            }
+            else {
+                String itemComponent = serialize(item.displayName().hoverEvent(item.asHoverEvent()));
+                String[] strings = msg.split(regexify(itemText.right()), 2);
+
+                if (Data.other_content && strings.length == 2) {
+                    outContent = deserialize(addMsgCommandSuggestion(strings[0], p) + itemComponent + "<reset>" + addMsgCommandSuggestion(strings[1], p));
+                } else {
+                    outContent = deserialize(itemComponent);
                 }
             }
-
-            hover = hover.appendNewline();
-            hover = hover.append(deserialize(getMaterialText(item)));
-
-            String itemComponent ="<hover:show_text:\"" + serialize(hover) + "\">" + Data.itemText.replaceAll("\\{item}", serialize(item.displayName())) + "</hover>";
-
-            if (Data.other_content) {
-                String[] strings = msg.split("\\[item]", 2);
-                outContent = deserialize(addMsgCommandSuggestion(strings[0], p) + itemComponent + addMsgCommandSuggestion(strings[1], p));
-            }
-            else {
-                outContent = deserialize(itemComponent);
-            }
         }
 
-        Component out = hoverContent.append(deserialize("<reset>")).append(outContent);
+        e.message(outContent);
+    }
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void afterMessage(AsyncChatEvent e) {
+        Player p = e.getPlayer();
+
+        Component hoverContent = deserialize(addMsgCommandSuggestion("<hover:show_text:\"" + modifiedHover(p) + "\">" + setPlaceholders(p, Data.format) + "</hover>", p));
+        Component out = deserialize("<reset>").append(hoverContent.append(deserialize("<reset>")).append(e.message())).append(deserialize("<reset>"));
+
         Bukkit.broadcast(out);
+        e.setCancelled(true);
     }
 
     String modifiedHover(Player p) {
@@ -79,7 +93,7 @@ public class MessageEvent implements Listener {
             String str = Data.hoverFormat.get(i);
             out.append(setPlaceholders(p, str));
             if (i != Data.hoverFormat.size() - 1)
-                out.append(deserialize("<newline>"));
+                out.append("<newline>");
         }
         return out.toString();
     }
@@ -96,10 +110,19 @@ public class MessageEvent implements Listener {
     }
 
     String addMsgCommandSuggestion(String middleMsg, Player p) {
-        return "<click:suggest_command:/msg " + p.getName() + ">" + middleMsg + "</click>";
+        return "<click:suggest_command:/msg " + p.getName() + ">" + middleMsg;
     }
 
-    String getMaterialText(ItemStack is) {
-        return "<dark_gray>minecraft:" + is.getType().toString().toLowerCase() + "</dark_gray>";
+    Pair<Boolean, String> containsWordFromList(String str, List<String> list) {
+        for (String s : list) {
+            if (str.contains(s))
+                return Pair.of(true, s);
+        }
+        return Pair.of(false, "none");
+    }
+    String regexify(String str) {
+        if (str.charAt(0) == '[')
+            return "\\" + str;
+        return str;
     }
 }
