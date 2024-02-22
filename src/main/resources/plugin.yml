@@ -1,5 +1,5 @@
 name: StrokkChatFormat
-version: '${version}'
+version: '1.0'
 main: net.strokkur.Main
 api-version: '1.20'
 prefix: Strokk
@@ -13,10 +13,10 @@ permissions:
     default: op
   strokkur.inv:
     description: Allows the user to use the [inv] placeholder in chat
-    default: false
+    default: op
   strokkur.item:
     description: Allows the user to use the [item] placeholder in chat
-    default: false
+    default: op
 
 commands:
   scformat:
