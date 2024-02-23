@@ -24,7 +24,6 @@ public final class Main extends JavaPlugin {
 
         event(new MessageEvent());
         registerCommand(new SCFormatCMD(), "scformat");
-        //registerCommand(new TestCMD(), "test");
     }
 
     public void event(Listener e) {

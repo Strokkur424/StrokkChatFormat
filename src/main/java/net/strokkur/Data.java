@@ -20,24 +20,23 @@ public class Data {
             if (!file.exists()) {
                 file.createNewFile();
 
-                cfg.set("format.chatmessage", "%luckperms_prefix%%player_name% <gray>»</gray> ");
-                cfg.set("format.hovermessage", List.of("<bold><red>%player_name%'s Stats<reset>",
-                        "<yellow>Money:</yellow> <white>0</white>",
-                        "<green>Exp:</green> <white>0</white>"));
+                cfg.set("format.chatmessage", "%luckperms_prefix%%player_name% §8»§r ");
+                cfg.set("format.hovermessage", List.of("§4§l%player_name%'s Stats§r",
+                        "§eMoney: §f0§r",
+                        "§aExp: §f0§r"));
 
                 cfg.set("placeholder.item.enabled", true);
                 cfg.set("placeholder.inv.enabled", true);
-                cfg.set("placeholder.inv.format", "<dark_gray>[<green>%player_name%'s Inventory</green>]</dark_gray>");
+                cfg.set("placeholder.inv.format", "§8[§a%player_name%'s Inventory§8]§r");
+                cfg.set("placeholder.item.format", "§8[§f{item}§8]");
 
                 cfg.set("placeholder.item.chat", List.of("[item]", "[i]"));
                 cfg.set("placeholder.inv.chat", List.of("[inv]", "[inventory]"));
 
-                cfg.set("placeholder.allow-other-content", true);
-
-                cfg.set("message.invExpiration", "<dark_red>[!]</dark_red> <red>This inventory already expired</red>");
-                cfg.set("message.noItem", "<dark_red>[!]</dark_red> <red>You are not holding an item!</red>");
-                cfg.set("message.reload", "<red>[!]</red> <yellow>Successfully reloaded <aqua>format-config.yml</aqua></yellow>");
-                cfg.set("message.invInfo", "<dark_gray>[<yellow>Click to view inventory</yellow>]</dark_gray>");
+                cfg.set("message.invExpiration", "§4[!] §cThis inventory already expired.");
+                cfg.set("message.noItem", "§4[!] §cYou are not holding an item!");
+                cfg.set("message.reload", "§6[!] §eSuccessfully reloaded §bformat-config.yml§e.");
+                cfg.set("message.invInfo", "§8[§eClick to view inventory§8]§r");
 
                 try {
                     cfg.save(file);
@@ -62,12 +61,11 @@ public class Data {
 
         item = cfg.getBoolean("placeholder.item.enabled");
         inv = cfg.getBoolean("placeholder.inv.enabled");
+        itemText = cfg.getString("placeholder.item.format");
         invText = cfg.getString("placeholder.inv.format");
 
-        other_content = cfg.getBoolean("placeholder.allow-other-content");
-
         itemPlaceholders = cfg.getStringList("placeholder.item.chat");
-        invPlaceholders = cfg.getStringList("placeholder.inv.chat");
+        invPlaceholders =  cfg.getStringList("placeholder.inv.chat");
 
         expirationMessage = cfg.getString("message.invExpiration");
         noItem = cfg.getString("message.noItem");
@@ -76,8 +74,8 @@ public class Data {
     }
 
     public static List<String> hoverFormat, itemPlaceholders, invPlaceholders;
-    public static String expirationMessage, format, invText, reloadMessage, noItem, invInfo;
-    public static boolean item, inv, other_content;
+    public static String expirationMessage, format, invText, itemText, reloadMessage, noItem, invInfo;
+    public static boolean item, inv;
 
 
 }

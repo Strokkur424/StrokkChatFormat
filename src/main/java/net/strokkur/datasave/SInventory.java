@@ -1,9 +1,9 @@
 package net.strokkur.datasave;
 
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.strokkur.Data;
 import net.strokkur.Main;
 import net.strokkur.util.fastinv.FastInv;
+import net.strokkur.util.fastinv.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -47,7 +47,7 @@ public class SInventory {
     public static void openInventory(int ID, Player p) {
         FastInv inv = inventoryLists.get(ID);
         if (inv == null) {
-            p.sendMessage(MiniMessage.miniMessage().deserialize(Data.expirationMessage));
+            p.sendMessage(Data.expirationMessage);
             return;
         }
 
@@ -59,8 +59,7 @@ public class SInventory {
         PlayerInventory p = pl.getInventory();
         FastInv inv = new FastInv(54, pl.getName() + "'s Inventory");
 
-        ItemStack filler = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
-        filler.editMeta(meta -> meta.displayName(MiniMessage.miniMessage().deserialize("<black></black>")));
+        ItemStack filler = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).meta(meta -> meta.setDisplayName("§0")).build();
         inv.setItems(0, 53, filler, e -> e.setCancelled(true));
 
         setItemStack(inv, 1, p.getHelmet());
