@@ -48,21 +48,25 @@ public class Placeholder {
         String copy = original;
         sort();
 
+        boolean firstInv = false, firstItem = false;
+
         for (var trio : places) {
 
             var v = split(trio.left - translation, copy);
             out.add(new TextComponent(TextComponent.fromLegacyText(v.left)));
 
-            if (trio.right.equals(Type.INV) && p.hasPermission("strokkur.inv")) {
-                if (id == null)
-                    id = new SInventory(p).getID();
+            if (trio.right.equals(Type.INV) && p.hasPermission("strokkur.inv") && !(!Data.multipleItem && firstInv)) {
+                if (id == null) id = new SInventory(p).getID();
 
                 TextComponent invText = new TextComponent(TextComponent.fromLegacyText(MessageEvent.replacePlaceholders(p, Data.invText)));
                 invText.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(MessageEvent.getHoverFormat(p, List.of(Data.invInfo)))));
                 invText.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/scformat viewinv6237345 " + id));
+
+                firstInv = true;
+
                 out.add(invText);
             }
-            else if (trio.right.equals(Type.ITEM) && p.hasPermission("strokkur.item")) {
+            else if (trio.right.equals(Type.ITEM) && p.hasPermission("strokkur.item") && !(!Data.multipleInv && firstItem)) {
                 ItemStack is = p.getInventory().getItemInMainHand();
                 if (is.getType().equals(Material.AIR)) {
                     p.sendMessage(Data.noItem);
@@ -83,6 +87,8 @@ public class Placeholder {
                     TextComponent second = new TextComponent(TextComponent.fromLegacyText(split[1]));
                     item.addExtra(second);
                 }
+
+                firstItem = true;
 
                 out.add(first);
                 out.add(item);

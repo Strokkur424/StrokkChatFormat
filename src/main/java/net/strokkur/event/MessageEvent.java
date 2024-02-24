@@ -23,11 +23,6 @@ import java.util.regex.Pattern;
 
 public class MessageEvent implements Listener {
 
-    @EventHandler
-    public void gradient(AsyncPlayerChatEvent e) {
-        e.setMessage("§x§0§8§4§C§F§BL§x§0§B§4§F§F§Bo§x§0§E§5§2§F§Bo§x§1§1§5§5§F§Bk §x§1§4§5§9§F§Ba§x§1§8§5§C§F§Bt §x§1§B§5§F§F§Bm§x§1§E§6§2§F§By §x§2§1§6§5§F§Bf§x§2§4§6§8§F§Ba§x§2§7§6§C§F§Bn§x§2§A§6§F§F§Bc§x§2§D§7§2§F§By §x§3§0§7§5§F§Bi§x§3§4§7§8§F§Ct§x§3§7§7§B§F§Ce§x§3§A§7§E§F§Cm§x§3§D§8§2§F§C: §x§4§0§8§5§F§C[§x§4§3§8§8§F§Ci§x§4§6§8§B§F§C]§x§4§9§8§E§F§C. §x§4§C§9§1§F§CA§x§5§0§9§4§F§Cl§x§5§3§9§8§F§Cs§x§5§6§9§B§F§Co §x§5§9§9§E§F§Cm§x§5§C§A§1§F§Cy §x§5§F§A§4§F§Ci§x§6§2§A§7§F§Cn§x§6§5§A§B§F§Cv§x§6§9§A§E§F§Ce§x§6§C§B§1§F§Cn§x§6§F§B§4§F§Ct§x§7§2§B§7§F§Co§x§7§5§B§A§F§Cr§x§7§8§B§D§F§Cy §x§7§B§C§1§F§C(§x§7§E§C§4§F§C[§x§8§1§C§7§F§Ci§x§8§5§C§A§F§Dn§x§8§8§C§D§F§Dv§x§8§B§D§0§F§D]§x§8§E§D§3§F§D) §x§9§1§D§7§F§Di§x§9§4§D§A§F§Ds §x§9§7§D§D§F§Ds§x§9§A§E§0§F§Di§x§9§D§E§3§F§Dc§x§A§1§E§6§F§Dk§x§A§4§E§A§F§D, §x§A§7§E§D§F§Dn§x§A§A§F§0§F§Do§x§A§D§F§3§F§D?");
-    }
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void messageEvent(AsyncPlayerChatEvent e) {
         if (e.isCancelled())
@@ -67,13 +62,6 @@ public class MessageEvent implements Listener {
                 break;
 
             Matcher matcher = r.matcher(copy);
-            if (!Data.multipleInv && matcher.find()) {
-                int index = matcher.start();
-                int length = matcher.end() - index;
-                holder.add(new Trio<>(index, length, Placeholder.Type.INV));
-                break;
-            }
-
             while (matcher.find()) {
                 int index = matcher.start();
                 int length = matcher.end() - index;
@@ -92,13 +80,6 @@ public class MessageEvent implements Listener {
                 break;
 
             Matcher matcher = r.matcher(copy);
-            if (!Data.multipleItem && matcher.find()) {
-                int index = matcher.start();
-                int length = matcher.end() - index;
-                holder.add(new Trio<>(index, length, Placeholder.Type.ITEM));
-                break;
-            }
-
             while (matcher.find()) {
                 int index = matcher.start();
                 int length = matcher.end() - index;
