@@ -67,6 +67,13 @@ public class MessageEvent implements Listener {
                 break;
 
             Matcher matcher = r.matcher(copy);
+            if (!Data.multipleInv && matcher.find()) {
+                int index = matcher.start();
+                int length = matcher.end() - index;
+                holder.add(new Trio<>(index, length, Placeholder.Type.INV));
+                break;
+            }
+
             while (matcher.find()) {
                 int index = matcher.start();
                 int length = matcher.end() - index;
@@ -85,8 +92,14 @@ public class MessageEvent implements Listener {
                 break;
 
             Matcher matcher = r.matcher(copy);
-            while (matcher.find()) {
+            if (!Data.multipleItem && matcher.find()) {
+                int index = matcher.start();
+                int length = matcher.end() - index;
+                holder.add(new Trio<>(index, length, Placeholder.Type.ITEM));
+                break;
+            }
 
+            while (matcher.find()) {
                 int index = matcher.start();
                 int length = matcher.end() - index;
 
