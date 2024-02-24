@@ -7,10 +7,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+@SuppressWarnings("ALL")
 public class Data {
 
-    static File folder = new File("plugins/Strokkur");
-    static File file = new File("plugins/Strokkur/format-config.yml");
+    static final File folder = new File("plugins/Strokkur");
+    static final File file = new File("plugins/Strokkur/format-config.yml");
     static YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 
     static {
@@ -22,6 +23,7 @@ public class Data {
 
         try {
             if (!file.exists()) {
+                //noinspection BlockingMethodInNonBlockingContext
                 if (!file.createNewFile()) {
                     Bukkit.getConsoleSender().sendMessage("File was not created even though the file didn't exist just a nanosecond ago ._.");
                 }

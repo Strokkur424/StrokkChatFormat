@@ -18,9 +18,9 @@ import java.util.UUID;
 
 public class SInventory {
 
-    static HashMap<Integer, FastInv> inventoryLists = new HashMap<>();
-    static HashMap<UUID, Integer> playerInventoryList = new HashMap<>();
-    int id;
+    static final HashMap<Integer, FastInv> inventoryLists = new HashMap<>();
+    static final HashMap<UUID, Integer> playerInventoryList = new HashMap<>();
+    final int id;
     public SInventory(Player p) {
         int i = new Random().nextInt();
         id = i;

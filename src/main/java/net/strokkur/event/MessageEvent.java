@@ -147,15 +147,15 @@ public class MessageEvent implements Listener {
         return color(is) + out;
     }
 
-    static List<Material> yellow = List.of(Material.ELYTRA, Material.TOTEM_OF_UNDYING, Material.GOLDEN_APPLE, Material.HEART_OF_THE_SEA, Material.NETHER_STAR, Material.DRAGON_BREATH,
+    static final List<Material> yellow = List.of(Material.ELYTRA, Material.TOTEM_OF_UNDYING, Material.GOLDEN_APPLE, Material.HEART_OF_THE_SEA, Material.NETHER_STAR, Material.DRAGON_BREATH,
                                     Material.CREEPER_BANNER_PATTERN, Material.SKULL_BANNER_PATTERN, Material.EXPERIENCE_BOTTLE);
-    static List<Material> blue = List.of(Material.END_CRYSTAL, Material.CONDUIT, Material.BEACON);
-    static List<Material> pink = List.of(Material.ENCHANTED_GOLDEN_APPLE, Material.MOJANG_BANNER_PATTERN, Material.DRAGON_EGG, Material.JIGSAW, Material.STRUCTURE_BLOCK,
+    static final List<Material> blue = List.of(Material.END_CRYSTAL, Material.CONDUIT, Material.BEACON);
+    static final List<Material> pink = List.of(Material.ENCHANTED_GOLDEN_APPLE, Material.MOJANG_BANNER_PATTERN, Material.DRAGON_EGG, Material.JIGSAW, Material.STRUCTURE_BLOCK,
                                     Material.STRUCTURE_VOID, Material.BARRIER, Material.DEBUG_STICK, Material.LIGHT);
 
-    static List<String> yellowString = List.of("enchanted_book", "skull", "head");
-    static List<String> blueString = List.of("music_disc");
-    static List<String> pinkString = List.of("command");
+    static final List<String> yellowString = List.of("enchanted_book", "skull", "head");
+    static final List<String> blueString = List.of("music_disc");
+    static final List<String> pinkString = List.of("command");
 
     public static String color(ItemStack is) {
         String name = is.getType().name().toLowerCase();

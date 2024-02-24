@@ -15,7 +15,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
@@ -85,8 +85,7 @@ public final class FastInvManager {
 
         @EventHandler
         public void onInventoryClick(InventoryClickEvent e) {
-            if (e.getInventory().getHolder() instanceof FastInv && e.getClickedInventory() != null) {
-                FastInv inv = (FastInv) e.getInventory().getHolder();
+            if (e.getInventory().getHolder() instanceof FastInv inv && e.getClickedInventory() != null) {
 
                 boolean wasCancelled = e.isCancelled();
                 e.setCancelled(true);
@@ -102,8 +101,7 @@ public final class FastInvManager {
 
         @EventHandler
         public void onInventoryOpen(InventoryOpenEvent e) {
-            if (e.getInventory().getHolder() instanceof FastInv) {
-                FastInv inv = (FastInv) e.getInventory().getHolder();
+            if (e.getInventory().getHolder() instanceof FastInv inv) {
 
                 inv.handleOpen(e);
             }
@@ -111,8 +109,7 @@ public final class FastInvManager {
 
         @EventHandler
         public void onInventoryClose(InventoryCloseEvent e) {
-            if (e.getInventory().getHolder() instanceof FastInv) {
-                FastInv inv = (FastInv) e.getInventory().getHolder();
+            if (e.getInventory().getHolder() instanceof FastInv inv) {
 
                 if (inv.handleClose(e)) {
                     Bukkit.getScheduler().runTask(this.plugin, () -> inv.open((Player) e.getPlayer()));

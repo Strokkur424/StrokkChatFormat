@@ -20,11 +20,8 @@ import java.util.List;
 
 public class Placeholder {
 
-    List<Trio<Integer, Integer, Type>> places = new ArrayList<>();
+    final List<Trio<Integer, Integer, Type>> places = new ArrayList<>();
     final String original;
-
-    final int invLength;
-    final int itemLength;
 
     int translation = 0;
 
