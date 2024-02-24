@@ -7,4 +7,13 @@ public record Pair<T1, T2>(T1 left, T2 right) {
         return String.format("(%s, %s)", left, right);
     }
 
+    @Override
+    public T1 left() {
+        return left;
+    }
+
+    @Override
+    public T2 right() {
+        return right;
+    }
 }

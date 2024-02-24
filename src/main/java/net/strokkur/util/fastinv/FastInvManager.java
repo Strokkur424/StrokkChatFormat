@@ -28,8 +28,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.Plugin;
 
@@ -95,24 +93,6 @@ public final class FastInvManager {
                 // This prevents un-canceling the event if another plugin canceled it before
                 if (!wasCancelled && !e.isCancelled()) {
                     e.setCancelled(false);
-                }
-            }
-        }
-
-        @EventHandler
-        public void onInventoryOpen(InventoryOpenEvent e) {
-            if (e.getInventory().getHolder() instanceof FastInv inv) {
-
-                inv.handleOpen(e);
-            }
-        }
-
-        @EventHandler
-        public void onInventoryClose(InventoryCloseEvent e) {
-            if (e.getInventory().getHolder() instanceof FastInv inv) {
-
-                if (inv.handleClose(e)) {
-                    Bukkit.getScheduler().runTask(this.plugin, () -> inv.open((Player) e.getPlayer()));
                 }
             }
         }

@@ -42,7 +42,6 @@ import java.util.function.Consumer;
  * @author MrMicky
  * @version 3.0.3
  */
-@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
 public class FastInv implements InventoryHolder {
 
     private final Map<Integer, Consumer<InventoryClickEvent>> itemHandlers = new HashMap<>();
@@ -115,6 +114,11 @@ public class FastInv implements InventoryHolder {
     @Override
     public @NotNull Inventory getInventory() {
         return this.inventory;
+    }
+
+    public void handleClick(InventoryClickEvent e) {
+        if (itemHandlers.containsKey(e.getRawSlot()))
+            itemHandlers.get(e.getRawSlot()).accept(e);
     }
 
 }

@@ -28,9 +28,6 @@ public class Placeholder {
 
     public Placeholder(String str) {
         original = str;
-
-        invLength = new TextComponent(TextComponent.fromLegacyText(Data.invText)).toPlainText().length();
-        itemLength = new TextComponent(TextComponent.fromLegacyText(Data.invText)).toPlainText().length();
     }
 
     public void add(Trio<Integer, Integer, Type> place) {
@@ -49,10 +46,10 @@ public class Placeholder {
 
         for (var trio : places) {
 
-            var v = split(trio.left - translation, copy);
-            out.add(new TextComponent(TextComponent.fromLegacyText(v.left)));
+            var v = split(trio.left() - translation, copy);
+            out.add(new TextComponent(TextComponent.fromLegacyText(v.left())));
 
-            if (trio.right.equals(Type.INV) && p.hasPermission("strokkur.inv") && !(!Data.multipleItem && firstInv)) {
+            if (trio.right().equals(Type.INV) && p.hasPermission("strokkur.inv") && !(!Data.multipleItem && firstInv)) {
                 if (id == null) id = new SInventory(p).getID();
 
                 TextComponent invText = new TextComponent(TextComponent.fromLegacyText(MessageEvent.replacePlaceholders(p, Data.invText)));
@@ -63,7 +60,7 @@ public class Placeholder {
 
                 out.add(invText);
             }
-            else if (trio.right.equals(Type.ITEM) && p.hasPermission("strokkur.item") && !(!Data.multipleInv && firstItem)) {
+            else if (trio.right().equals(Type.ITEM) && p.hasPermission("strokkur.item") && !(!Data.multipleInv && firstItem)) {
                 ItemStack is = p.getInventory().getItemInMainHand();
                 if (is.getType().equals(Material.AIR)) {
                     p.sendMessage(Data.noItem);
@@ -91,13 +88,13 @@ public class Placeholder {
                 out.add(item);
             }
             else {
-                out.add(new TextComponent(TextComponent.fromLegacyText(split(trio.middle, v.right).left)));
+                out.add(new TextComponent(TextComponent.fromLegacyText(split(trio.middle(), v.right()).left())));
             }
 
-            copy = split(trio.middle + trio.left - translation, copy).right;
+            copy = split(trio.middle() + trio.left() - translation, copy).right();
 
-            translation += v.left.length();
-            translation += trio.middle;
+            translation += v.left().length();
+            translation += trio.middle();
         }
 
         out.add(new TextComponent(TextComponent.fromLegacyText(copy)));
@@ -106,7 +103,7 @@ public class Placeholder {
 
 
     void sort() {
-        places.sort(Comparator.comparingInt(t -> t.left));
+        places.sort(Comparator.comparingInt(Trio::left));
     }
 
     Pair<String, String> split(int i, String str) {

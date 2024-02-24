@@ -161,15 +161,15 @@ public class MessageEvent implements Listener {
         String name = is.getType().name().toLowerCase();
         Material material = is.getType();
 
-        if (yellow.contains(material) || containsString(name, yellowString).left) {
+        if (yellow.contains(material) || containsString(name, yellowString).left()) {
             return "§e";
         }
 
-        if (blue.contains(material) || containsString(name, blueString).left) {
+        if (blue.contains(material) || containsString(name, blueString).left()) {
             return "§b";
         }
 
-        if (pink.contains(material) || containsString(name, pinkString).left) {
+        if (pink.contains(material) || containsString(name, pinkString).left()) {
             return "§d";
         }
 
