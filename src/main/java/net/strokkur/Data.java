@@ -1,5 +1,7 @@
 package net.strokkur;
 
+import net.strokkur.event.MessageEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
@@ -13,12 +15,16 @@ public class Data {
 
     static {
         if (!folder.exists()) {
-            folder.mkdir();
+            if (!folder.mkdir()) {
+                Bukkit.getConsoleSender().sendMessage("Guess the folder existed even though it should not have existed :P");
+            }
         }
 
         try {
             if (!file.exists()) {
-                file.createNewFile();
+                if (!file.createNewFile()) {
+                    Bukkit.getConsoleSender().sendMessage("File was not created even though the file didn't exist just a nanosecond ago ._.");
+                }
 
                 cfg.set("format.chatmessage", "%luckperms_prefix%%player_name% §8»§r ");
                 cfg.set("format.hovermessage", List.of("§4§l%player_name%'s Stats§r",
@@ -26,9 +32,12 @@ public class Data {
                         "§aExp: §f0§r"));
 
                 cfg.set("placeholder.item.enabled", true);
-                cfg.set("placeholder.inv.enabled", true);
-                cfg.set("placeholder.inv.format", "§8[§a%player_name%'s Inventory§8]§r");
+                cfg.set("placeholder.item.multiple", true);
                 cfg.set("placeholder.item.format", "§8[§f{item}§8]");
+
+                cfg.set("placeholder.inv.enabled", true);
+                cfg.set("placeholder.inv.multiple", true);
+                cfg.set("placeholder.inv.format", "§8[§a%player_name%'s Inventory§8]§r");
 
                 cfg.set("placeholder.item.chat", List.of("[item]", "[i]"));
                 cfg.set("placeholder.inv.chat", List.of("[inv]", "[inventory]"));
@@ -56,26 +65,31 @@ public class Data {
     public static void reload() {
         cfg = YamlConfiguration.loadConfiguration(file);
 
-        format = cfg.getString("format.chatmessage");
+        format      = cfg.getString    ("format.chatmessage");
         hoverFormat = cfg.getStringList("format.hovermessage");
 
-        item = cfg.getBoolean("placeholder.item.enabled");
-        inv = cfg.getBoolean("placeholder.inv.enabled");
-        itemText = cfg.getString("placeholder.item.format");
-        invText = cfg.getString("placeholder.inv.format");
+        item         = cfg.getBoolean("placeholder.item.enabled");
+        multipleItem = cfg.getBoolean("placeholder.item.multiple");
+        itemText     = cfg.getString ("placeholder.item.format");
 
-        itemPlaceholders = cfg.getStringList("placeholder.item.chat");
-        invPlaceholders =  cfg.getStringList("placeholder.inv.chat");
+        inv          = cfg.getBoolean("placeholder.inv.enabled");
+        multipleInv  = cfg.getBoolean("placeholder.inv.multiple");
+        invText      = cfg.getString ("placeholder.inv.format");
+
+        itemPlaceholders = cfg.getStringList ("placeholder.item.chat");
+        invPlaceholders  =  cfg.getStringList("placeholder.inv.chat");
 
         expirationMessage = cfg.getString("message.invExpiration");
-        noItem = cfg.getString("message.noItem");
-        reloadMessage = cfg.getString("message.reload");
-        invInfo = cfg.getString("message.invInfo");
+        noItem            = cfg.getString("message.noItem");
+        reloadMessage     = cfg.getString("message.reload");
+        invInfo           = cfg.getString("message.invInfo");
+
+        MessageEvent.reloadPatterns();
     }
 
     public static List<String> hoverFormat, itemPlaceholders, invPlaceholders;
     public static String expirationMessage, format, invText, itemText, reloadMessage, noItem, invInfo;
-    public static boolean item, inv;
+    public static boolean item, inv, multipleItem, multipleInv;
 
 
 }

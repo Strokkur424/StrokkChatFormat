@@ -1,21 +1,21 @@
-name: StrokkChatFormat
+name: ChatFormat
 version: '1.0'
 main: net.strokkur.Main
 api-version: '1.20'
-prefix: Strokk
+prefix: ChatFormat
 load: STARTUP
 author: Strokkur24
-description: Simple component based chat format additions
+description: Simple component based chat format
 depend: [PlaceholderAPI]
 permissions:
   strokkur.reload:
     description: Allows the user to reload the config
     default: op
   strokkur.inv:
-    description: Allows the user to use the [inv] placeholder in chat
+    description: Allows the user to use the "inv" placeholder in chat
     default: op
   strokkur.item:
-    description: Allows the user to use the [item] placeholder in chat
+    description: Allows the user to use the "item" placeholder in chat
     default: op
 
 commands:

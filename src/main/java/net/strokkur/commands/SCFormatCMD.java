@@ -1,23 +1,16 @@
 package net.strokkur.commands;
 
-import net.md_5.bungee.api.chat.TextComponent;
 import net.strokkur.Data;
-import net.strokkur.Main;
 import net.strokkur.datasave.SInventory;
-import net.strokkur.event.MessageEvent;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Set;
 
 public class SCFormatCMD implements CommandExecutor, TabCompleter {
     @Override
